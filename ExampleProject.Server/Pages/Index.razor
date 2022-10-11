@@ -1,7 +1,6 @@
 ﻿@page "/"
 @implements IDisposable;
 @using Nethereum.UI;
-@using Nethereum.Metamask;
 @using Nethereum.Erc20.Blazor;
 @inject IJSRuntime jsRuntime;
 @inject SelectedEthereumHostProviderService selectedHostProviderService
@@ -86,7 +85,7 @@
 
     protected override void OnInitialized()
     {
-         _ethereumHostProvider = selectedHostProviderService.SelectedHost;
+        _ethereumHostProvider = selectedHostProviderService.SelectedHost;
         _ethereumHostProvider.SelectedAccountChanged += HostProvider_SelectedAccountChanged;
         _ethereumHostProvider.NetworkChanged += HostProvider_NetworkChanged;
         _ethereumHostProvider.EnabledChanged += HostProviderOnEnabledChanged;
@@ -125,11 +124,14 @@
 
     private async Task HostProviderOnEnabledChanged(bool enabled)
     {
-        if (enabled)
+        await InvokeAsync(async () =>
         {
-            await GetChainId();
-            this.StateHasChanged();
-        }
+            if (enabled)
+            {
+                await GetChainId();
+                this.StateHasChanged();
+            }
+        });
     }
 
     private async Task GetChainId()
@@ -142,14 +144,20 @@
     private async Task HostProvider_SelectedAccountChanged(string account)
     {
         SelectedAccount = account;
-        await GetChainId();
-        this.StateHasChanged();
+        await InvokeAsync(() => GetChainId());
+        await InvokeAsync(() =>
+        {
+            this.StateHasChanged();
+        });
     }
 
     private async Task HostProvider_NetworkChanged(long chainId)
     {
-        SelectedChainId = chainId;
-        this.StateHasChanged();
+        await InvokeAsync(() =>
+        {
+            SelectedChainId = chainId;
+            this.StateHasChanged();
+        });
     }
 
     protected async Task GetBlockHashAsync()

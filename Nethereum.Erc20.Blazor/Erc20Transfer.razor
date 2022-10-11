@@ -87,9 +87,12 @@
     {
         try
         {
-            TransactionHash = null;
+            IEthereumHostProvider provider = selectedHostProviderService.SelectedHost;
+            string myAddress = await provider.GetProviderSelectedAccountAsync();
 
-            var functionTransfer = transferModel.GetTransferFunction();
+            TransactionHash = null;
+            
+            var functionTransfer = transferModel.GetTransferFunction(myAddress);
             var web3 = await selectedHostProviderService.SelectedHost.GetWeb3Async();
             var contractHandler = web3.Eth.GetContractTransactionHandler<TransferFunction>();
             TransactionHash = await contractHandler.SendRequestAsync(transferModel.ERC20Contract.Address, functionTransfer);

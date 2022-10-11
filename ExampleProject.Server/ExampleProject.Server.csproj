@@ -3,7 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
-
+  <PropertyGroup>
+	<UseRazorSourceGenerator>false</UseRazorSourceGenerator>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="9.4.0" />
 	  <PackageReference Include="Nethereum.Metamask.Blazor" Version="4.8.0" />

@@ -64,7 +64,8 @@
     private async Task MetamaskHostProvider_SelectedAccountChanged(string account)
     {
         SelectedAccount = account;
-        await InvokeAsync(() => this.StateHasChanged());
+        //await InvokeAsync(() => this.StateHasChanged());
+        this.StateHasChanged();
     }
 
     protected async Task EnableEthereumAsync()
